@@ -33,16 +33,12 @@ export const verifyAuth = (req: RequestPayload, res: Response, next: NextFunctio
     });
   }
 
-  // console.log('ini token :', req.token as string);
-
   jwt.verify(token as string, process.env.SECRET_KEY!, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid token' });
     }
 
     req.user = decoded as IDecode;
-    console.log('ini decode jwt', req.user);
-    console.log('tipe decode jwt', typeof req.user);
     next();
   });
 };
