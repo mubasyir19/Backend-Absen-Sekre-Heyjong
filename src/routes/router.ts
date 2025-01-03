@@ -13,7 +13,7 @@ router.post('/admin/community/attendance', addAdmin);
 
 router.post('/admin/login', loginAdmin);
 
-router.get('/attendance', getAttendanceGuest);
+router.get('/attendance', verifyAuth, getAttendanceGuest);
 router.post('/attendance/add', attendanceGuest);
 
 router.get('/verify', verifyAuth, protectedAuth);
