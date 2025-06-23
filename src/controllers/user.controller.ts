@@ -1,14 +1,21 @@
 import { Request, Response } from 'express';
-import { User } from '../models/user.model';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { RequestPayload } from '../data-types';
+import { PrismaClient } from '../../prisma/generated/prisma';
 // import { CustomRequest } from '../types';
+
+const prisma = new PrismaClient();
 
 export const loginAdmin = async (req: Request, res: Response): Promise<Response | any> => {
   const { username, password } = req.body;
   try {
-    const checkUser = await User.findOne({ username: username });
+    // const checkUser = await User.findOne({ username: username }); //mongodb
+    const checkUser = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
 
     if (!checkUser) {
       return res.status(404).json({
@@ -29,7 +36,7 @@ export const loginAdmin = async (req: Request, res: Response): Promise<Response 
     }
 
     const user = {
-      id: checkUser._id,
+      id: checkUser.id,
       name: checkUser.name,
       username: checkUser.username,
     };
@@ -59,7 +66,12 @@ export const loginAdmin = async (req: Request, res: Response): Promise<Response 
 export const addAdmin = async (req: Request, res: Response): Promise<Response | any> => {
   const { name, username, password } = req.body;
   try {
-    const checkUser = await User.findOne({ username: username });
+    // const checkUser = await User.findOne({ username: username }); //mongodb
+    const checkUser = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
 
     if (checkUser) {
       return res.status(404).json({
@@ -72,7 +84,14 @@ export const addAdmin = async (req: Request, res: Response): Promise<Response | 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newAdmin = await User.create({ name, username, password: hashedPassword });
+    // const newAdmin = await User.create({ name, username, password: hashedPassword }); //mongodb
+    const newAdmin = await prisma.user.create({
+      data: {
+        name,
+        username,
+        password: hashedPassword,
+      },
+    });
 
     return res.status(201).json({
       status: 200,

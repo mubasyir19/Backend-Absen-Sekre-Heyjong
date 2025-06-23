@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { Attendance } from '../models/attendance.model';
+import { PrismaClient } from '../../prisma/generated/prisma';
+
+const prisma = new PrismaClient();
 
 export const getAttendanceGuest = async (req: Request, res: Response): Promise<Response | any> => {
   try {
-    const resultData = await Attendance.find();
+    // const resultData = await Attendance.find(); //mongodb
+    const resultData = await prisma.attendance.findMany();
 
     return res.status(200).json({
       status: 200,
@@ -22,11 +25,19 @@ export const getAttendanceGuest = async (req: Request, res: Response): Promise<R
 export const attendanceGuest = async (req: Request, res: Response): Promise<Response | any> => {
   const { name, position, institution, purpose } = req.body;
   try {
-    const addGuest = await Attendance.create({
-      name: name,
-      position: position,
-      institution: institution,
-      purpose: purpose,
+    // const addGuest = await Attendance.create({
+    //   name: name,
+    //   position: position,
+    //   institution: institution,
+    //   purpose: purpose,
+    // }); // mongodb
+    const addGuest = await prisma.attendance.create({
+      data: {
+        name: name,
+        position: position,
+        institution: institution,
+        purpose: purpose,
+      },
     });
 
     return res.status(201).json({
