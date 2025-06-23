@@ -14,6 +14,7 @@ export const getAttendanceGuest = async (req: Request, res: Response): Promise<R
       data: resultData,
     });
   } catch (error) {
+    console.log('an error occured = ', error);
     return res.status(500).json({
       status: 500,
       message: 'An error occured ',
@@ -46,6 +47,7 @@ export const attendanceGuest = async (req: Request, res: Response): Promise<Resp
       data: addGuest,
     });
   } catch (error) {
+    console.log('an error occured = ', error);
     return res.status(500).json({
       status: 500,
       message: 'An error occured ',

@@ -55,6 +55,7 @@ export const loginAdmin = async (req: Request, res: Response): Promise<Response 
       },
     });
   } catch (error) {
+    console.log('an error occured = ', error);
     return res.status(500).json({
       status: 500,
       message: 'An error occured ',
@@ -99,6 +100,7 @@ export const addAdmin = async (req: Request, res: Response): Promise<Response | 
       data: newAdmin,
     });
   } catch (error) {
+    console.log('an error occured = ', error);
     return res.status(500).json({
       status: 500,
       message: 'An error occured ',
